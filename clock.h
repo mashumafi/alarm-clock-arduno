@@ -27,6 +27,8 @@ class Clock {
     uint8_t m_minute;
     uint8_t m_second;
     bool m_alarm;
+    int8_t m_edit;
+    char m_chars[4];
 
     bool addSecond();
   public:
@@ -34,6 +36,7 @@ class Clock {
     void useRemote(const Remote& remote);
     void update();
     int toInt() const;
+    char const* getChars() const;
     bool alarm() const;
 };
 

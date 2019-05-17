@@ -20,7 +20,7 @@ void Display::update() {
 
 void Display::useClock(const Clock& clock) {
   if (TIME == m_state) {
-    m_sevseg.setNumber(clock.toInt());
+    m_sevseg.setChars(clock.getChars());
   }
 }
 

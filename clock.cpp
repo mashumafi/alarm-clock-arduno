@@ -11,7 +11,8 @@ Clock::Clock():
   m_hour(12),
   m_minute(34),
   m_second(0),
-  m_alarm(false) {
+  m_alarm(false),
+  m_edit(0) {
 }
 
 bool buttonToInt(const Remote& remote, uint8_t& button) {
@@ -44,11 +45,39 @@ bool buttonToInt(const Remote& remote, uint8_t& button) {
 void Clock::useRemote(const Remote& remote) {
   uint8_t btn;
   if (buttonToInt(remote, btn)) {
+    switch (m_edit) {
+      case 0: {
+          if (btn > 2) {
+            return;
+          }
+          m_hour = btn * 10 + m_hour % 10;
+        }
+      case 1: {
+          if (btn > (m_hour > 20 ? 3 : 9)) {
+            return;
+          }
+          m_hour = (m_hour / 10) * 10 + btn;
+        }
+      case 2: {
+          if (btn > 5) {
+            return;
+          }
+          m_minute = btn * 10 + m_minute % 10;
+        }
+      case 3: {
+          m_minute = (m_minute / 10) * 10 + btn;
+        }
+    }
+    m_edit = (m_edit + 1) % 4;
   }
 }
 
 void Clock::update() {
   m_alarm = false;
+  if (0 != m_edit) {
+    m_second = 0;
+    m_timer.reset();
+  }
   while (m_timer.countdown(ONE_SECOND)) {
     if (addSecond()) {
       for (size_t i = 0; i < ALARM_COUNT; i++) {
@@ -58,6 +87,17 @@ void Clock::update() {
         }
       }
     }
+  }
+  memset(m_chars, ' ', 4);
+  m_chars[0] = '0' + (m_minute / 10);
+  if (1 != m_edit) {
+    m_chars[1] = '0' + (m_minute % 10);
+  }
+  if (2 != m_edit) {
+    m_chars[2] = '0' + (m_second / 10);
+  }
+  if (3 != m_edit) {
+    m_chars[3] = '0' + (m_second % 10);
   }
 }
 
@@ -69,13 +109,17 @@ bool Clock::addSecond() {
     if (m_minute == 60) {
       m_hour++;
       m_minute = 0;
-      if (m_hour >= 24) {
+      if (m_hour == 24) {
         m_hour = 0;
       }
     }
     return true;
   }
   return false;
+}
+
+char const* Clock::getChars() const {
+  return m_chars;
 }
 
 int Clock::toInt() const {
