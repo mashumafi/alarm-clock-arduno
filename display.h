@@ -10,6 +10,10 @@
 class Display {
   private:
     SevSeg m_sevseg;
+    enum State {
+      TIME,
+      VOLUME
+    } m_state;
   public:
     Display();
     void update();

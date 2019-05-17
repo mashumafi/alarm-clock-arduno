@@ -14,7 +14,37 @@ Clock::Clock():
   m_alarm(false) {
 }
 
+bool buttonToInt(const Remote& remote, uint8_t& button) {
+  if (remote.zeroPressed()) {
+    button = 0;
+  } else if (remote.onePressed()) {
+    button = 1;
+  } else if (remote.twoPressed()) {
+    button = 2;
+  } else if (remote.threePressed()) {
+    button = 3;
+  } else if (remote.fourPressed()) {
+    button = 4;
+  } else if (remote.fivePressed()) {
+    button = 5;
+  } else if (remote.sixPressed()) {
+    button = 6;
+  } else if (remote.sevenPressed()) {
+    button = 7;
+  } else if (remote.eightPressed()) {
+    button = 8;
+  } else if (remote.ninePressed()) {
+    button = 9;
+  } else {
+    return false;
+  }
+  return true;
+}
+
 void Clock::useRemote(const Remote& remote) {
+  uint8_t btn;
+  if (buttonToInt(remote, btn)) {
+  }
 }
 
 void Clock::update() {

@@ -19,7 +19,9 @@ void Display::update() {
 }
 
 void Display::useClock(const Clock& clock) {
-  m_sevseg.setNumber(clock.toInt());
+  if (TIME == m_state) {
+    m_sevseg.setNumber(clock.toInt());
+  }
 }
 
 void Display::useLight(const Light& light) {
@@ -27,7 +29,20 @@ void Display::useLight(const Light& light) {
 }
 
 void Display::useVolume(const Volume& volume) {
-  if(volume.changed()) {
-    volume.getLevel();
+  if (volume.changed()) {
+    char str[4] = {' ', ' ', ' ', ' '};
+    byte index = 0;
+    byte level = volume.getLevel();
+    for (; level >= 2; level -= 2) {
+      str[index] = 'O';
+      index++;
+    }
+    if (level == 1) {
+      str[index] = 'I';
+    }
+    m_sevseg.setChars(str);
+    m_state = VOLUME;
+  } else {
+    m_state = TIME;
   }
 }

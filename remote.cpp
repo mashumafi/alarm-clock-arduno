@@ -3,18 +3,18 @@
 const uint32_t POWER = 0xFFA25D;
 const uint32_t VOLUME_UP = 0xFF906F;
 const uint32_t VOLUME_DOWN = 0xFFA857;
-const uint32_t CHANNEL_UP = 0x0;
-const uint32_t CHANNEL_DOWN = 0x0;
-const uint32_t ZERO = 0x0;
-const uint32_t ONE = 0x0;
-const uint32_t TWO = 0x0;
-const uint32_t THREE = 0x0;
-const uint32_t FOUR = 0x0;
-const uint32_t FIVE = 0x0;
-const uint32_t SIX = 0x0;
-const uint32_t SEVEN = 0x0;
-const uint32_t EIGHT = 0x0;
-const uint32_t NINE = 0x0;
+const uint32_t CHANNEL_UP = 0x1;
+const uint32_t CHANNEL_DOWN = 0x1;
+const uint32_t ZERO = 0x1;
+const uint32_t ONE = 0x1;
+const uint32_t TWO = 0x1;
+const uint32_t THREE = 0x1;
+const uint32_t FOUR = 0x1;
+const uint32_t FIVE = 0x1;
+const uint32_t SIX = 0x1;
+const uint32_t SEVEN = 0x1;
+const uint32_t EIGHT = 0x1;
+const uint32_t NINE = 0x1;
 
 Remote::Remote(uint8_t pin) : m_irrecv(pin) {
   memset(&m_results, 0, sizeof(decode_results));
