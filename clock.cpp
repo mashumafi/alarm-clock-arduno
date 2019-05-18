@@ -50,22 +50,26 @@ void Clock::useRemote(const Remote& remote) {
           if (btn > 2) {
             return;
           }
-          m_hour = btn * 10 + m_hour % 10;
+          m_hour = btn * 10;
+          break;
         }
       case 1: {
-          if (btn > (m_hour > 20 ? 3 : 9)) {
+          if (btn > (m_hour >= 20 ? 3 : 9)) {
             return;
           }
-          m_hour = (m_hour / 10) * 10 + btn;
+          m_hour = m_hour + btn;
+          break;
         }
       case 2: {
           if (btn > 5) {
             return;
           }
-          m_minute = btn * 10 + m_minute % 10;
+          m_minute = btn * 10;
+          break;
         }
       case 3: {
-          m_minute = (m_minute / 10) * 10 + btn;
+          m_minute = m_minute + btn;
+          break;
         }
     }
     m_edit = (m_edit + 1) % 4;
@@ -89,15 +93,15 @@ void Clock::update() {
     }
   }
   memset(m_chars, ' ', 4);
-  m_chars[0] = '0' + (m_minute / 10);
+  m_chars[0] = '0' + (m_hour / 10);
   if (1 != m_edit) {
-    m_chars[1] = '0' + (m_minute % 10);
+    m_chars[1] = '0' + (m_hour % 10);
   }
   if (2 != m_edit) {
-    m_chars[2] = '0' + (m_second / 10);
+    m_chars[2] = '0' + (m_minute / 10);
   }
   if (3 != m_edit) {
-    m_chars[3] = '0' + (m_second % 10);
+    m_chars[3] = '0' + (m_minute % 10);
   }
 }
 

@@ -14,7 +14,7 @@ bool Timer::countdown(unsigned long ms) {
   unsigned long current = millis();
   unsigned long diff = current - m_time;
   if (diff >= ms) {
-    m_time = current + (diff - ms);
+    m_time += ms;
     return true;
   }
   return false;

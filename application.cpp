@@ -10,8 +10,10 @@ Application::Application() :
   m_clock(),
   m_light(LIGHT_OUTPUT, LIGHT_INPUT),
   m_remote(REMOTE_PIN) {
-  Serial.begin(9600);
-  while (!Serial);
+}
+
+void Application::init() {
+  m_remote.init();
 }
 
 void Application::update() {

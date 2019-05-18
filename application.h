@@ -18,6 +18,7 @@ class Application {
     Volume m_volume;
   public:
     Application();
+    void init();
     void update();
 };
 

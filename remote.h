@@ -7,8 +7,10 @@ class Remote {
   private:
     IRrecv m_irrecv;
     decode_results m_results;
+    void reset();
   public:
     Remote(uint8_t pin);
+    void init();
     void update();
     bool powerPressed() const;
     bool volumeUpPressed() const;

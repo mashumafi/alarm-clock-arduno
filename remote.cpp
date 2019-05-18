@@ -5,19 +5,22 @@ const uint32_t VOLUME_UP = 0xFF906F;
 const uint32_t VOLUME_DOWN = 0xFFA857;
 const uint32_t CHANNEL_UP = 0x1;
 const uint32_t CHANNEL_DOWN = 0x1;
-const uint32_t ZERO = 0x1;
-const uint32_t ONE = 0x1;
-const uint32_t TWO = 0x1;
-const uint32_t THREE = 0x1;
-const uint32_t FOUR = 0x1;
-const uint32_t FIVE = 0x1;
-const uint32_t SIX = 0x1;
-const uint32_t SEVEN = 0x1;
-const uint32_t EIGHT = 0x1;
-const uint32_t NINE = 0x1;
+const uint32_t ZERO = 0xFF6897;
+const uint32_t ONE = 0xFF30CF;
+const uint32_t TWO = 0xFF18E7;
+const uint32_t THREE = 0xFF7A85;
+const uint32_t FOUR = 0xFF10EF;
+const uint32_t FIVE = 0xFF38C7;
+const uint32_t SIX = 0xFF5AA5;
+const uint32_t SEVEN = 0xFF42BD;
+const uint32_t EIGHT = 0xFF4AB5;
+const uint32_t NINE = 0xFF52AD;
 
 Remote::Remote(uint8_t pin) : m_irrecv(pin) {
-  memset(&m_results, 0, sizeof(decode_results));
+  reset();
+}
+
+void Remote::init() {
   m_irrecv.enableIRIn();
   m_irrecv.blink13(true);
 }
@@ -27,8 +30,12 @@ void Remote::update() {
     Serial.println(m_results.value, HEX);
     m_irrecv.resume();
   } else if (m_results.value) {
-    memset(&m_results, 0, sizeof(decode_results));
+    reset();
   }
+}
+
+void Remote::reset() {
+  m_results.value = 0;
 }
 
 bool Remote::powerPressed() const {

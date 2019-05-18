@@ -18,7 +18,7 @@ void Volume::useRemote(const Remote& remote) {
   } else if (remote.volumeDownPressed()) {
     m_level = max(1, m_level - 1);
   } else {
-    if (m_timer.countdown(1000)) {
+    if (m_timer.countdown(3000)) {
       m_changed = false;
     }
     return;
