@@ -2,12 +2,14 @@
 
 Application app;
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   while (!Serial);
   app.init();
 }
 
-void loop() {
+void loop()
+{
   app.update();
 }
