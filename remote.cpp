@@ -35,7 +35,7 @@ void Remote::update() {
 }
 
 void Remote::reset() {
-  m_results.value = 0;
+  memset(&m_results, 0, sizeof(m_results));
 }
 
 bool Remote::powerPressed() const {
