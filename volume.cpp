@@ -1,5 +1,7 @@
 #include "volume.h"
 
+const uint16_t DISPLAY_DURATION = 3000;
+
 Volume::Volume() : m_level(4)
 {
 }
@@ -26,7 +28,7 @@ void Volume::useRemote(const Remote &remote)
   }
   else
   {
-    if (m_timer.countdown(3000))
+    if (m_timer.countdown(DISPLAY_DURATION))
     {
       m_changed = false;
     }
