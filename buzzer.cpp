@@ -8,6 +8,10 @@ Buzzer::Buzzer(uint8_t pin) : m_pin(pin),
 
 void Buzzer::setBeeping(bool beeping)
 {
+  if (beeping == m_beeping)
+  {
+    return;
+  }
   m_beeping = beeping;
   m_index = 0;
   m_timer.reset();
@@ -16,18 +20,7 @@ void Buzzer::setBeeping(bool beeping)
 
 void Buzzer::useClock(const Clock &clock)
 {
-  if (clock.alarm())
-  {
-    setBeeping(true);
-  }
-}
-
-void Buzzer::useRemote(const Remote &remote)
-{
-  if (remote.powerPressed())
-  {
-    setBeeping(!m_beeping);
-  }
+  setBeeping(clock.alarm());
 }
 
 void Buzzer::useVolume(const Volume &volume)

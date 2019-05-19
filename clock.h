@@ -29,13 +29,14 @@ class Clock {
     bool m_alarm;
     int8_t m_edit;
     char m_chars[4];
+    Alarm m_snooze;
 
     bool addSecond();
+    int toInt() const;
   public:
     Clock();
     void useRemote(const Remote& remote);
     void update();
-    int toInt() const;
     char const* getChars() const;
     bool alarm() const;
 };

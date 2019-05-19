@@ -29,7 +29,6 @@ void Application::update()
 
   // update outputs
   m_buzzer.useClock(m_clock);
-  m_buzzer.useRemote(m_remote);
   m_buzzer.useVolume(m_volume);
 
   m_display.useClock(m_clock);

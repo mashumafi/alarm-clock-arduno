@@ -36,7 +36,6 @@ private:
 public:
   Buzzer(uint8_t pin);
   void useClock(const Clock &clock);
-  void useRemote(const Remote &remote);
   void useVolume(const Volume &volume);
 };
 

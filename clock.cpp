@@ -7,8 +7,8 @@ const unsigned long ONE_SECOND = 1000;
 const size_t ALARM_COUNT = 10;
 const PROGMEM Alarm ALARMS[ALARM_COUNT];
 
-Clock::Clock() : m_hour(12),
-                 m_minute(34),
+Clock::Clock() : m_hour(0),
+                 m_minute(0),
                  m_second(0),
                  m_alarm(false),
                  m_edit(0)
@@ -106,11 +106,19 @@ void Clock::useRemote(const Remote &remote)
     }
     m_edit = (m_edit + 1) % 4;
   }
+  if (remote.powerPressed())
+  {
+    m_alarm = false;
+  }
+  else if (remote.mutePressed())
+  {
+    m_alarm = false;
+    m_snooze.m_enabled = true;
+  }
 }
 
 void Clock::update()
 {
-  m_alarm = false;
   if (0 != m_edit)
   {
     m_second = 0;
@@ -124,9 +132,15 @@ void Clock::update()
       {
         if (ALARMS[i].m_enabled && ALARMS[i].toInt() == toInt())
         {
+          m_snooze.m_enabled = false;
           m_alarm = true;
           break;
         }
+      }
+      if (m_snooze.m_enabled && m_snooze.toInt() == toInt())
+      {
+        m_snooze.m_enabled = false;
+        m_alarm = true;
       }
     }
   }
