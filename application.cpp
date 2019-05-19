@@ -5,18 +5,20 @@ const uint8_t LIGHT_OUTPUT = A5;
 const uint8_t LIGHT_INPUT = A4;
 const uint8_t REMOTE_PIN = A2;
 
-Application::Application() :
-  m_buzzer(BUZZER_PIN),
-  m_clock(),
-  m_light(LIGHT_OUTPUT, LIGHT_INPUT),
-  m_remote(REMOTE_PIN) {
+Application::Application() : m_buzzer(BUZZER_PIN),
+                             m_clock(),
+                             m_light(LIGHT_OUTPUT, LIGHT_INPUT),
+                             m_remote(REMOTE_PIN)
+{
 }
 
-void Application::init() {
+void Application::init()
+{
   m_remote.init();
 }
 
-void Application::update() {
+void Application::update()
+{
   // update inputs
   m_remote.update();
 

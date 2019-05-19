@@ -1,6 +1,7 @@
 #include "display.h"
 
-Display::Display() {
+Display::Display()
+{
   byte numDigits = 4;
   byte digitPins[] = {2, 3, 4, 5};
   byte segmentPins[] = {6, 7, 8, 9, 10, 11, 12, 13};
@@ -14,35 +15,45 @@ Display::Display() {
                  updateWithDelays, leadingZeros, disableDecPoint);
 }
 
-void Display::update() {
+void Display::update()
+{
   m_sevseg.refreshDisplay();
 }
 
-void Display::useClock(const Clock& clock) {
-  if (TIME == m_state) {
+void Display::useClock(const Clock &clock)
+{
+  if (TIME == m_state)
+  {
     m_sevseg.setChars(clock.getChars());
   }
 }
 
-void Display::useLight(const Light& light) {
+void Display::useLight(const Light &light)
+{
   m_sevseg.setBrightness(light.getBrightness());
 }
 
-void Display::useVolume(const Volume& volume) {
-  if (volume.changed()) {
+void Display::useVolume(const Volume &volume)
+{
+  if (volume.changed())
+  {
     char str[4] = {' ', ' ', ' ', ' '};
     byte index = 0;
     byte level = volume.getLevel();
-    for (; level >= 2; level -= 2) {
+    for (; level >= 2; level -= 2)
+    {
       str[index] = 'O';
       index++;
     }
-    if (level == 1) {
+    if (level == 1)
+    {
       str[index] = 'I';
     }
     m_sevseg.setChars(str);
     m_state = VOLUME;
-  } else {
+  }
+  else
+  {
     m_state = TIME;
   }
 }

@@ -8,18 +8,20 @@
 #include "remote.h"
 #include "volume.h"
 
-class Application {
-  private:
-    Buzzer m_buzzer;
-    Clock m_clock;
-    Display m_display;
-    Light m_light;
-    Remote m_remote;
-    Volume m_volume;
-  public:
-    Application();
-    void init();
-    void update();
+class Application
+{
+private:
+  Buzzer m_buzzer;
+  Clock m_clock;
+  Display m_display;
+  Light m_light;
+  Remote m_remote;
+  Volume m_volume;
+
+public:
+  Application();
+  void init();
+  void update();
 };
 
 #endif

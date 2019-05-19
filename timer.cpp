@@ -2,18 +2,22 @@
 
 #include <Arduino.h>
 
-Timer::Timer() {
+Timer::Timer()
+{
   reset();
 }
 
-void Timer::reset() {
+void Timer::reset()
+{
   m_time = millis();
 }
 
-bool Timer::countdown(unsigned long ms) {
+bool Timer::countdown(unsigned long ms)
+{
   unsigned long current = millis();
   unsigned long diff = current - m_time;
-  if (diff >= ms) {
+  if (diff >= ms)
+  {
     m_time += ms;
     return true;
   }

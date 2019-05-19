@@ -1,24 +1,33 @@
 #include "volume.h"
 
-Volume::Volume():
-  m_level(4) {
+Volume::Volume() : m_level(4)
+{
 }
 
-uint16_t Volume::getLevel() const {
+uint16_t Volume::getLevel() const
+{
   return m_level;
 }
 
-uint16_t Volume::getValue() const {
+uint16_t Volume::getValue() const
+{
   return 1 << m_level;
 }
 
-void Volume::useRemote(const Remote& remote) {
-  if (remote.volumeUpPressed()) {
+void Volume::useRemote(const Remote &remote)
+{
+  if (remote.volumeUpPressed())
+  {
     m_level = min(8, m_level + 1);
-  } else if (remote.volumeDownPressed()) {
+  }
+  else if (remote.volumeDownPressed())
+  {
     m_level = max(1, m_level - 1);
-  } else {
-    if (m_timer.countdown(3000)) {
+  }
+  else
+  {
+    if (m_timer.countdown(3000))
+    {
       m_changed = false;
     }
     return;
@@ -27,6 +36,7 @@ void Volume::useRemote(const Remote& remote) {
   m_timer.reset();
 }
 
-bool Volume::changed() const {
+bool Volume::changed() const
+{
   return m_changed;
 }
