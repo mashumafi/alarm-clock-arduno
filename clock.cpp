@@ -72,7 +72,7 @@ bool buttonToInt(const Remote &remote, uint8_t &button)
 
 void Clock::useRemote(const Remote &remote)
 {
-  if (m_show_state)
+  if (!m_show_state)
   {
     uint8_t btn;
     if (buttonToInt(remote, btn))
