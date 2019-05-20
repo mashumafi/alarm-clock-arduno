@@ -11,7 +11,9 @@ Clock::Clock() : m_hour(0),
                  m_alarm(false),
                  m_edit(0),
                  m_channel(0),
-                 m_show_state(false)
+                 m_show_state(false),
+                 m_set(false),
+                 m_blink(false)
 {
 }
 
@@ -85,6 +87,7 @@ void Clock::useRemote(const Remote &remote)
       }
       else
       {
+        m_set = true;
         hour = &m_hour;
         minute = &m_minute;
       }
@@ -197,6 +200,17 @@ void Clock::update()
     }
   }
   memset(m_chars, ' ', 4);
+  if (!m_set)
+  {
+    if (m_blink_timer.countdown(1500))
+    {
+      m_blink = !m_blink;
+    }
+    if (m_blink)
+    {
+      return;
+    }
+  }
   if (m_show_state)
   {
     if (m_state.countdown(2000))

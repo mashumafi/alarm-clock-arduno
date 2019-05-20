@@ -41,6 +41,10 @@ private:
   Timer m_state;
   bool m_show_state;
 
+  bool m_set;
+  uint8_t m_blink;
+  Timer m_blink_timer;
+
   bool addSecond();
   int toInt() const;
 
