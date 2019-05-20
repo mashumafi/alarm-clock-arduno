@@ -42,7 +42,7 @@ private:
   bool m_show_state;
 
   bool m_set;
-  uint8_t m_blink;
+  bool m_blink;
   Timer m_blink_timer;
 
   bool addSecond();

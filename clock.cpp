@@ -200,17 +200,6 @@ void Clock::update()
     }
   }
   memset(m_chars, ' ', 4);
-  if (!m_set)
-  {
-    if (m_blink_timer.countdown(1500))
-    {
-      m_blink = !m_blink;
-    }
-    if (m_blink)
-    {
-      return;
-    }
-  }
   if (m_show_state)
   {
     if (m_state.countdown(2000))
@@ -257,7 +246,17 @@ void Clock::update()
       }
     }
   }
-
+  if (!m_set && m_channel == 0)
+  {
+    if (m_blink_timer.countdown(1500))
+    {
+      m_blink = !m_blink;
+    }
+    if (m_blink)
+    {
+      return;
+    }
+  }
   uint8_t *hour, *minute;
   if (m_channel)
   {
