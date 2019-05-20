@@ -10,7 +10,8 @@ Clock::Clock() : m_hour(0),
                  m_second(0),
                  m_alarm(false),
                  m_edit(0),
-                 m_channel(0)
+                 m_channel(0),
+                 m_show_state(false)
 {
 }
 
@@ -71,60 +72,63 @@ bool buttonToInt(const Remote &remote, uint8_t &button)
 
 void Clock::useRemote(const Remote &remote)
 {
-  uint8_t btn;
-  if (buttonToInt(remote, btn))
+  if (m_show_state)
   {
-    uint8_t *hour, *minute;
-    if (m_channel)
+    uint8_t btn;
+    if (buttonToInt(remote, btn))
     {
-      hour = &m_alarms[m_channel - 1].m_hour;
-      minute = &m_alarms[m_channel - 1].m_minute;
-    }
-    else
-    {
-      hour = &m_hour;
-      minute = &m_minute;
-    }
-    switch (m_edit)
-    {
-    case 0:
-    {
-      if (btn > 2)
-      {
-        return;
-      }
-      *hour = btn * 10;
-      break;
-    }
-    case 1:
-    {
-      if (btn > (*hour >= 20 ? 3 : 9))
-      {
-        return;
-      }
-      *hour = *hour + btn;
-      break;
-    }
-    case 2:
-    {
-      if (btn > 5)
-      {
-        return;
-      }
-      *minute = btn * 10;
-      break;
-    }
-    case 3:
-    {
-      *minute = *minute + btn;
+      uint8_t *hour, *minute;
       if (m_channel)
       {
-        EEPROM.put(sizeof(Alarm) * (m_channel - 1), m_alarms[m_channel - 1]);
+        hour = &m_alarms[m_channel - 1].m_hour;
+        minute = &m_alarms[m_channel - 1].m_minute;
       }
-      break;
+      else
+      {
+        hour = &m_hour;
+        minute = &m_minute;
+      }
+      switch (m_edit)
+      {
+      case 0:
+      {
+        if (btn > 2)
+        {
+          return;
+        }
+        *hour = btn * 10;
+        break;
+      }
+      case 1:
+      {
+        if (btn > (*hour >= 20 ? 3 : 9))
+        {
+          return;
+        }
+        *hour = *hour + btn;
+        break;
+      }
+      case 2:
+      {
+        if (btn > 5)
+        {
+          return;
+        }
+        *minute = btn * 10;
+        break;
+      }
+      case 3:
+      {
+        *minute = *minute + btn;
+        if (m_channel)
+        {
+          EEPROM.put(sizeof(Alarm) * (m_channel - 1), m_alarms[m_channel - 1]);
+        }
+        break;
+      }
+      }
+      m_edit = (m_edit + 1) % 4;
     }
-    }
-    m_edit = (m_edit + 1) % 4;
   }
   if (m_alarm)
   {
@@ -154,15 +158,43 @@ void Clock::useRemote(const Remote &remote)
     {
       m_channel = (m_channel + ALARM_COUNT) % (ALARM_COUNT + 1);
     }
-    if (remote.channelUpPressed())
+    else if (remote.channelUpPressed())
     {
       m_channel = (m_channel + 1) % (ALARM_COUNT + 1);
     }
+    else
+    {
+      return;
+    }
+    m_show_state = true;
+    m_state.reset();
   }
 }
 
 void Clock::update()
 {
+  memset(m_chars, ' ', 4);
+  if (m_show_state)
+  {
+    if (m_state.countdown(2000))
+    {
+      m_show_state = false;
+    }
+    else
+    {
+      if (m_channel)
+      {
+        memcpy(m_chars, "al00", 4);
+        m_chars[2] += m_channel / 10;
+        m_chars[3] += m_channel % 10;
+      }
+      else
+      {
+        memcpy(m_chars, "ti00", 4);
+      }
+      return;
+    }
+  }
   if (m_edit != 0 && m_channel == 0)
   {
     m_second = 0;
@@ -201,7 +233,6 @@ void Clock::update()
     minute = &m_minute;
   }
 
-  memset(m_chars, ' ', 4);
   m_chars[0] = '0' + (*hour / 10);
   if (1 != m_edit)
   {

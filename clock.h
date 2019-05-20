@@ -38,6 +38,9 @@ private:
   Alarm m_alarms[ALARM_COUNT];
   Alarm m_snooze;
 
+  Timer m_state;
+  bool m_show_state;
+
   bool addSecond();
   int toInt() const;
 
