@@ -3,9 +3,9 @@
 const uint32_t POWER = 0xFFA25D;
 const uint32_t VOLUME_UP = 0xFF906F;
 const uint32_t VOLUME_DOWN = 0xFFA857;
-const uint32_t CHANNEL_UP = 0x1;
-const uint32_t CHANNEL_DOWN = 0x1;
-const uint32_t MUTE = 0x1;
+const uint32_t CHANNEL_UP = 0xFFC23D;
+const uint32_t CHANNEL_DOWN = 0xFF02FD;
+const uint32_t MUTE = 0xFFE21D;
 const uint32_t ZERO = 0xFF6897;
 const uint32_t ONE = 0xFF30CF;
 const uint32_t TWO = 0xFF18E7;

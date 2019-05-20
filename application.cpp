@@ -15,6 +15,7 @@ Application::Application() : m_buzzer(BUZZER_PIN),
 void Application::init()
 {
   m_remote.init();
+  m_clock.init();
 }
 
 void Application::update()

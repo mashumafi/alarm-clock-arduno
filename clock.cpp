@@ -1,18 +1,23 @@
 #include "clock.h"
 
 #include <avr/pgmspace.h>
+#include <EEPROM.h>
 
 const unsigned long ONE_SECOND = 1000;
-
-const size_t ALARM_COUNT = 10;
-const PROGMEM Alarm ALARMS[ALARM_COUNT];
 
 Clock::Clock() : m_hour(0),
                  m_minute(0),
                  m_second(0),
                  m_alarm(false),
-                 m_edit(0)
+                 m_edit(0),
+                 m_channel(0)
 {
+}
+
+void Clock::init()
+{
+  EEPROM.get(0, m_alarms);
+  pinMode(A1, OUTPUT);
 }
 
 bool buttonToInt(const Remote &remote, uint8_t &button)
@@ -69,6 +74,17 @@ void Clock::useRemote(const Remote &remote)
   uint8_t btn;
   if (buttonToInt(remote, btn))
   {
+    uint8_t *hour, *minute;
+    if (m_channel)
+    {
+      hour = &m_alarms[m_channel - 1].m_hour;
+      minute = &m_alarms[m_channel - 1].m_minute;
+    }
+    else
+    {
+      hour = &m_hour;
+      minute = &m_minute;
+    }
     switch (m_edit)
     {
     case 0:
@@ -77,7 +93,7 @@ void Clock::useRemote(const Remote &remote)
       {
         return;
       }
-      m_hour = btn * 10;
+      *hour = btn * 10;
       break;
     }
     case 1:
@@ -86,7 +102,7 @@ void Clock::useRemote(const Remote &remote)
       {
         return;
       }
-      m_hour = m_hour + btn;
+      *hour = *hour + btn;
       break;
     }
     case 2:
@@ -95,31 +111,62 @@ void Clock::useRemote(const Remote &remote)
       {
         return;
       }
-      m_minute = btn * 10;
+      *minute = btn * 10;
       break;
     }
     case 3:
     {
-      m_minute = m_minute + btn;
+      *minute = *minute + btn;
+      if (m_channel)
+      {
+        EEPROM.put(sizeof(Alarm) * (m_channel - 1), m_alarms[m_channel - 1]);
+      }
       break;
     }
     }
     m_edit = (m_edit + 1) % 4;
   }
-  if (remote.powerPressed())
+  if (m_alarm)
   {
-    m_alarm = false;
+    if (remote.powerPressed())
+    {
+      m_alarm = false;
+    }
+    else if (remote.mutePressed())
+    {
+      m_alarm = false;
+      m_snooze.m_enabled = true;
+      m_snooze.m_hour = m_hour;
+      m_snooze.m_minute = m_minute + 5;
+    }
   }
-  else if (remote.mutePressed())
+  else if (m_channel)
   {
-    m_alarm = false;
-    m_snooze.m_enabled = true;
+    if (remote.powerPressed())
+    {
+      m_alarms[m_channel - 1].m_enabled = !m_alarms[m_channel - 1].m_enabled;
+      EEPROM.put(sizeof(Alarm) * (m_channel - 1), m_alarms[m_channel - 1]);
+      Serial.println(m_alarms[m_channel - 1].m_enabled);
+    }
+  }
+  if (!m_edit)
+  {
+    if (remote.channelDownPressed())
+    {
+      m_channel = (m_channel + ALARM_COUNT) % (ALARM_COUNT + 1);
+      Serial.println(m_channel);
+    }
+    if (remote.channelUpPressed())
+    {
+      m_channel = (m_channel + 1) % (ALARM_COUNT + 1);
+      Serial.println(m_channel);
+    }
   }
 }
 
 void Clock::update()
 {
-  if (0 != m_edit)
+  if (m_edit != 0 && m_channel == 0)
   {
     m_second = 0;
     m_timer.reset();
@@ -130,7 +177,7 @@ void Clock::update()
     {
       for (size_t i = 0; i < ALARM_COUNT; i++)
       {
-        if (ALARMS[i].m_enabled && ALARMS[i].toInt() == toInt())
+        if (m_alarms[i].m_enabled && m_alarms[i].toInt() == toInt())
         {
           m_snooze.m_enabled = false;
           m_alarm = true;
@@ -144,19 +191,47 @@ void Clock::update()
       }
     }
   }
+
+  uint8_t *hour, *minute;
+  if (m_channel)
+  {
+    hour = &m_alarms[m_channel - 1].m_hour;
+    minute = &m_alarms[m_channel - 1].m_minute;
+  }
+  else
+  {
+    hour = &m_hour;
+    minute = &m_minute;
+  }
+
   memset(m_chars, ' ', 4);
-  m_chars[0] = '0' + (m_hour / 10);
+  m_chars[0] = '0' + (*hour / 10);
   if (1 != m_edit)
   {
-    m_chars[1] = '0' + (m_hour % 10);
+    m_chars[1] = '0' + (*hour % 10);
   }
   if (2 != m_edit)
   {
-    m_chars[2] = '0' + (m_minute / 10);
+    m_chars[2] = '0' + (*minute / 10);
   }
   if (3 != m_edit)
   {
-    m_chars[3] = '0' + (m_minute % 10);
+    m_chars[3] = '0' + (*minute % 10);
+  }
+  if (m_channel)
+  {
+    if (m_alarms[m_channel - 1].m_enabled)
+    {
+      digitalWrite(A1, HIGH);
+    }
+    else
+    {
+      digitalWrite(A1, LOW);
+    }
+  }
+  else
+  {
+    digitalWrite(A1, LOW);
   }
 }
 
