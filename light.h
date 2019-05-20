@@ -6,11 +6,10 @@
 class Light
 {
 private:
-  uint8_t m_output;
   uint8_t m_input;
 
 public:
-  Light(uint8_t output, uint8_t input);
+  Light(uint8_t input);
   uint8_t getBrightness() const;
 };
 
