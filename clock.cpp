@@ -173,6 +173,21 @@ void Clock::useRemote(const Remote &remote)
 
 void Clock::update()
 {
+  if (m_channel)
+  {
+    if (m_alarms[m_channel - 1].m_enabled)
+    {
+      digitalWrite(A1, HIGH);
+    }
+    else
+    {
+      digitalWrite(A1, LOW);
+    }
+  }
+  else
+  {
+    digitalWrite(A1, LOW);
+  }
   memset(m_chars, ' ', 4);
   if (m_show_state)
   {
@@ -245,21 +260,6 @@ void Clock::update()
   if (3 != m_edit)
   {
     m_chars[3] = '0' + (*minute % 10);
-  }
-  if (m_channel)
-  {
-    if (m_alarms[m_channel - 1].m_enabled)
-    {
-      digitalWrite(A1, HIGH);
-    }
-    else
-    {
-      digitalWrite(A1, LOW);
-    }
-  }
-  else
-  {
-    digitalWrite(A1, LOW);
   }
 }
 
