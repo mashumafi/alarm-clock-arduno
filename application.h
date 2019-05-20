@@ -18,6 +18,10 @@ private:
   Remote m_remote;
   Volume m_volume;
 
+  Timer m_stats_timer;
+  uint32_t m_updates;
+  void printStats();
+
 public:
   Application();
   void init();
