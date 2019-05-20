@@ -187,6 +187,14 @@ void Clock::update()
   else
   {
     digitalWrite(A1, LOW);
+    for (size_t i = 0; i < ALARM_COUNT; i++)
+    {
+      if (m_alarms[i].m_enabled && m_alarms[i].m_enabled)
+      {
+        digitalWrite(A1, HIGH);
+        break;
+      }
+    }
   }
   memset(m_chars, ' ', 4);
   if (m_show_state)
