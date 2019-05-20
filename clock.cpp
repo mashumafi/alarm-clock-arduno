@@ -98,7 +98,7 @@ void Clock::useRemote(const Remote &remote)
     }
     case 1:
     {
-      if (btn > (m_hour >= 20 ? 3 : 9))
+      if (btn > (*hour >= 20 ? 3 : 9))
       {
         return;
       }
