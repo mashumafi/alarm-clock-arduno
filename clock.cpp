@@ -146,7 +146,6 @@ void Clock::useRemote(const Remote &remote)
     {
       m_alarms[m_channel - 1].m_enabled = !m_alarms[m_channel - 1].m_enabled;
       EEPROM.put(sizeof(Alarm) * (m_channel - 1), m_alarms[m_channel - 1]);
-      Serial.println(m_alarms[m_channel - 1].m_enabled);
     }
   }
   if (!m_edit)
@@ -154,12 +153,10 @@ void Clock::useRemote(const Remote &remote)
     if (remote.channelDownPressed())
     {
       m_channel = (m_channel + ALARM_COUNT) % (ALARM_COUNT + 1);
-      Serial.println(m_channel);
     }
     if (remote.channelUpPressed())
     {
       m_channel = (m_channel + 1) % (ALARM_COUNT + 1);
-      Serial.println(m_channel);
     }
   }
 }
