@@ -130,6 +130,7 @@ void Clock::useRemote(const Remote &remote)
         break;
       }
       }
+      m_home_timer.reset();
       m_edit = (m_edit + 1) % 4;
     }
   }
@@ -153,6 +154,7 @@ void Clock::useRemote(const Remote &remote)
     {
       m_alarms[m_channel - 1].m_enabled = !m_alarms[m_channel - 1].m_enabled;
       EEPROM.put(sizeof(Alarm) * (m_channel - 1), m_alarms[m_channel - 1]);
+      m_home_timer.reset();
     }
   }
   if (!m_edit)
@@ -160,10 +162,12 @@ void Clock::useRemote(const Remote &remote)
     if (remote.channelDownPressed())
     {
       m_channel = (m_channel + ALARM_COUNT) % (ALARM_COUNT + 1);
+      m_home_timer.reset();
     }
     else if (remote.channelUpPressed())
     {
       m_channel = (m_channel + 1) % (ALARM_COUNT + 1);
+      m_home_timer.reset();
     }
     else
     {
@@ -255,6 +259,13 @@ void Clock::update()
     if (m_blink)
     {
       return;
+    }
+  }
+  if (m_edit == 0 && m_channel != 0)
+  {
+    if (m_home_timer.countdown(10000))
+    {
+      m_channel = 0;
     }
   }
   uint8_t *hour, *minute;

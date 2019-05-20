@@ -45,6 +45,8 @@ private:
   bool m_blink;
   Timer m_blink_timer;
 
+  Timer m_home_timer;
+
   bool addSecond();
   int toInt() const;
 
