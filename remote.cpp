@@ -5,6 +5,7 @@ const uint32_t VOLUME_UP = 0xFF906F;
 const uint32_t VOLUME_DOWN = 0xFFA857;
 const uint32_t CHANNEL_UP = 0xFFC23D;
 const uint32_t CHANNEL_DOWN = 0xFF02FD;
+const uint32_t SELECT = 0x1;
 const uint32_t MUTE = 0xFFE21D;
 const uint32_t ZERO = 0xFF6897;
 const uint32_t ONE = 0xFF30CF;
@@ -69,6 +70,10 @@ bool Remote::channelUpPressed() const
 bool Remote::channelDownPressed() const
 {
   return CHANNEL_DOWN == m_results.value;
+}
+
+bool Remote::selectPressed() const{
+  return SELECT == m_results.value;
 }
 
 bool Remote::mutePressed() const

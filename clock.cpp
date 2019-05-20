@@ -169,6 +169,10 @@ void Clock::useRemote(const Remote &remote)
       m_channel = (m_channel + 1) % (ALARM_COUNT + 1);
       m_home_timer.reset();
     }
+    else if (remote.selectPressed())
+    {
+      m_channel = 0;
+    }
     else
     {
       return;
