@@ -47,7 +47,7 @@ void Application::printStats()
   {
     Serial.print("Updated ");
     Serial.print(m_updates);
-    Serial.println("times.");
+    Serial.println(" times.");
     m_updates = 0;
 
     Serial.print("Light brightness: ");
