@@ -256,7 +256,7 @@ void Clock::update()
   }
   if (!m_set && m_channel == 0)
   {
-    if (m_blink_timer.countdown(1500))
+    if (m_blink_timer.countdown(1000))
     {
       m_blink = !m_blink;
     }
