@@ -17,7 +17,10 @@ Display::Display()
 
 void Display::update()
 {
-  m_sevseg.refreshDisplay();
+  if (m_show.countdown(16))
+  {
+    m_sevseg.refreshDisplay();
+  }
 }
 
 void Display::useClock(const Clock &clock)
