@@ -17,6 +17,8 @@ private:
     VOLUME
   } m_state;
 
+  Timer m_show;
+
 public:
   Display();
   void update();
