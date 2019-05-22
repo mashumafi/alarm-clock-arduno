@@ -4,15 +4,13 @@
 #include "remote.h"
 #include "timer.h"
 
-struct Alarm
+struct Time
 {
-  uint8_t m_enabled;
   uint8_t m_hour;
   uint8_t m_minute;
 
-  Alarm() : m_enabled(false),
-            m_hour(0),
-            m_minute(0)
+  Time() : m_hour(0),
+           m_minute(0)
   {
   }
 
@@ -20,14 +18,42 @@ struct Alarm
   {
     return m_hour * 100 + m_minute;
   }
+
+  uint16_t addMinutes(uint16_t p_minutes)
+  {
+    uint16_t minutes = m_minute + p_minutes;
+    m_minute = minutes % 60;
+    uint16_t hours = m_hour + minutes / 60;
+    m_hour = hours % 24;
+    return hours / 24;
+  }
+
+  bool operator<=(const Time &other)
+  {
+    return m_hour < other.m_hour || (m_hour == other.m_hour && m_minute < other.m_minute);
+  }
+
+  bool operator>=(const Time &other)
+  {
+    return m_hour > other.m_hour || (m_hour == other.m_hour && m_minute > other.m_minute);
+  }
+};
+
+struct Alarm
+{
+  uint8_t m_enabled;
+  Time m_time;
+
+  Alarm() : m_enabled(false)
+  {
+  }
 };
 
 class Clock
 {
 private:
   Timer m_timer;
-  uint8_t m_hour;
-  uint8_t m_minute;
+  Time m_time;
   uint8_t m_second;
   bool m_alarm;
   int8_t m_edit;

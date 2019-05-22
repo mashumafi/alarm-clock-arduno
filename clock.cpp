@@ -5,9 +5,7 @@
 
 const unsigned long ONE_SECOND = 1000;
 
-Clock::Clock() : m_hour(0),
-                 m_minute(0),
-                 m_second(0),
+Clock::Clock() : m_second(0),
                  m_alarm(false),
                  m_edit(0),
                  m_channel(0),
@@ -82,14 +80,14 @@ void Clock::useRemote(const Remote &remote)
       uint8_t *hour, *minute;
       if (m_channel)
       {
-        hour = &m_alarms[m_channel - 1].m_hour;
-        minute = &m_alarms[m_channel - 1].m_minute;
+        hour = &m_alarms[m_channel - 1].m_time.m_hour;
+        minute = &m_alarms[m_channel - 1].m_time.m_minute;
       }
       else
       {
         m_set = true;
-        hour = &m_hour;
-        minute = &m_minute;
+        hour = &m_time.m_hour;
+        minute = &m_time.m_minute;
       }
       switch (m_edit)
       {
@@ -144,8 +142,8 @@ void Clock::useRemote(const Remote &remote)
     {
       m_alarm = false;
       m_snooze.m_enabled = true;
-      m_snooze.m_hour = m_hour;
-      m_snooze.m_minute = m_minute + 5;
+      m_snooze.m_time = m_time;
+      m_snooze.m_time.addMinutes(5);
     }
   }
   else if (m_channel)
@@ -240,14 +238,14 @@ void Clock::update()
     {
       for (size_t i = 0; i < ALARM_COUNT; i++)
       {
-        if (m_alarms[i].m_enabled && m_alarms[i].toInt() == toInt())
+        if (m_alarms[i].m_enabled && m_alarms[i].m_time.toInt() == toInt())
         {
           m_snooze.m_enabled = false;
           m_alarm = true;
           break;
         }
       }
-      if (m_snooze.m_enabled && m_snooze.toInt() == toInt())
+      if (m_snooze.m_enabled && m_snooze.m_time.toInt() == toInt())
       {
         m_snooze.m_enabled = false;
         m_alarm = true;
@@ -275,13 +273,13 @@ void Clock::update()
   uint8_t *hour, *minute;
   if (m_channel)
   {
-    hour = &m_alarms[m_channel - 1].m_hour;
-    minute = &m_alarms[m_channel - 1].m_minute;
+    hour = &m_alarms[m_channel - 1].m_time.m_hour;
+    minute = &m_alarms[m_channel - 1].m_time.m_minute;
   }
   else
   {
-    hour = &m_hour;
-    minute = &m_minute;
+    hour = &m_time.m_hour;
+    minute = &m_time.m_minute;
   }
 
   m_chars[0] = '0' + (*hour / 10);
@@ -304,17 +302,8 @@ bool Clock::addSecond()
   m_second++;
   if (m_second == 60)
   {
-    m_minute++;
+    m_time.addMinutes(1);
     m_second = 0;
-    if (m_minute == 60)
-    {
-      m_hour++;
-      m_minute = 0;
-      if (m_hour == 24)
-      {
-        m_hour = 0;
-      }
-    }
     return true;
   }
   return false;
@@ -327,7 +316,7 @@ char const *Clock::getChars() const
 
 int Clock::toInt() const
 {
-  return m_hour * 100 + m_minute;
+  return m_time.toInt();
 }
 
 bool Clock::alarm() const
