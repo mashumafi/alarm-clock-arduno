@@ -132,17 +132,21 @@ void Clock::useRemote(const Remote &remote)
       m_edit = (m_edit + 1) % 4;
     }
   }
-  if (m_alarm)
+  if (m_alarm || m_snooze.m_enabled)
   {
     if (remote.powerPressed())
     {
       m_alarm = false;
+      m_snooze.m_enabled = false;
     }
     else if (remote.mutePressed())
     {
       m_alarm = false;
-      m_snooze.m_enabled = true;
-      m_snooze.m_time = m_time;
+      if (!m_snooze.m_enabled)
+      {
+        m_snooze.m_enabled = true;
+        m_snooze.m_time = m_time;
+      }
       m_snooze.m_time.addMinutes(5);
     }
   }
