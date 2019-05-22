@@ -14,6 +14,11 @@ struct Time
   {
   }
 
+  Time(uint8_t hour, uint8_t minute) : m_hour(hour),
+                                       m_minute(minute)
+  {
+  }
+
   int toInt() const
   {
     return m_hour * 100 + m_minute;
@@ -28,14 +33,9 @@ struct Time
     return hours / 24;
   }
 
-  bool operator<=(const Time &other)
+  bool operator<(const Time &other)
   {
     return m_hour < other.m_hour || (m_hour == other.m_hour && m_minute < other.m_minute);
-  }
-
-  bool operator>=(const Time &other)
-  {
-    return m_hour > other.m_hour || (m_hour == other.m_hour && m_minute > other.m_minute);
   }
 };
 

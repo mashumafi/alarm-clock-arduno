@@ -200,7 +200,23 @@ void Clock::update()
     {
       if (m_alarms[i].m_enabled && m_alarms[i].m_enabled)
       {
-        digitalWrite(A1, HIGH);
+        Time now = m_time;
+        Time later = now;
+        uint16_t days = later.addMinutes(12 * 60);
+        if (days > 0)
+        {
+          Time midnight(24, 00);
+          if (now < m_alarms[i].m_time && m_alarms[i].m_time < midnight)
+          {
+            digitalWrite(A1, HIGH);
+            break;
+          }
+        }
+        if (m_alarms[i].m_time < later)
+        {
+          digitalWrite(A1, HIGH);
+          break;
+        }
         break;
       }
     }
