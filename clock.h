@@ -33,9 +33,31 @@ struct Time
     return hours / 24;
   }
 
-  bool operator<(const Time &other)
+  bool operator<(const Time &other) const
   {
     return m_hour < other.m_hour || (m_hour == other.m_hour && m_minute < other.m_minute);
+  }
+
+  bool isSoon(const Time &now) const
+  {
+    Time later = now;
+    uint16_t days = later.addMinutes(12 * 60);
+    if (days > 0)
+    {
+      Time midnight(24, 00);
+      if ((now < *this && *this < midnight) || *this < later)
+      {
+        return true;
+      }
+    }
+    else
+    {
+      if (now < *this && *this < later)
+      {
+        return true;
+      }
+    }
+    return false;
   }
 };
 
