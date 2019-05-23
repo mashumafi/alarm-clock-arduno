@@ -23,7 +23,11 @@ public:
   Display();
   void update();
   void useClock(const Clock &clock);
-  void useLight(const Light &light);
+  template<typename Pin>
+  void useLight(const Pin &light)
+  {
+    m_sevseg.setBrightness(light.getBrightness());
+  }
   void useVolume(const Volume &volume);
 };
 

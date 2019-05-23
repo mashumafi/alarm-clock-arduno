@@ -184,11 +184,6 @@ void Clock::useRemote(const Remote &remote)
   }
 }
 
-void Clock::useLight(const Light &light)
-{
-  m_brightness = map(light.getBrightness(), 0, 100, 50, 150);
-}
-
 void Clock::update()
 {
   if (m_channel)

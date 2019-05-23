@@ -1,6 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "board.h"
 #include "buzzer.h"
 #include "clock.h"
 #include "display.h"
@@ -14,7 +15,7 @@ private:
   Buzzer m_buzzer;
   Clock m_clock;
   Display m_display;
-  Light m_light;
+  Light<Board::A4::in> m_light;
   Remote m_remote;
   Volume m_volume;
 

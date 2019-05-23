@@ -31,11 +31,6 @@ void Display::useClock(const Clock &clock)
   }
 }
 
-void Display::useLight(const Light &light)
-{
-  m_sevseg.setBrightness(light.getBrightness());
-}
-
 void Display::useVolume(const Volume &volume)
 {
   if (volume.changed())

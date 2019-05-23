@@ -104,7 +104,11 @@ public:
   Clock();
   void init();
   void useRemote(const Remote &remote);
-  void useLight(const Light& light);
+  template<typename Pin>
+  void useLight(const Pin& light)
+  {
+    m_brightness = map(light.getBrightness(), 0, 100, 50, 150);
+  }
   void update();
   char const *getChars() const;
   bool alarm() const;

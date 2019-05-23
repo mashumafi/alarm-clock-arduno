@@ -3,14 +3,19 @@
 
 #include <Arduino.h>
 
+template <typename InputDigitalPin>
 class Light
 {
-private:
-  uint8_t m_input;
-
 public:
-  Light(uint8_t input);
-  uint8_t getBrightness() const;
+  Light()
+  {
+    InputDigitalPin::pinMode();
+  }
+
+  uint8_t getBrightness() const
+  {
+    return map(InputDigitalPin::analogRead(), 0, 1024, 0, 100);
+  }
 };
 
 #endif
