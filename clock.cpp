@@ -202,27 +202,15 @@ void Clock::update()
     digitalWrite(A1, LOW);
     for (size_t i = 0; i < ALARM_COUNT; i++)
     {
-      if (m_alarms[i].m_enabled && m_alarms[i].m_enabled)
+      if (m_alarms[i].m_enabled && m_alarms[i].m_time.isSoon(m_time))
       {
-        Time now = m_time;
-        Time later = now;
-        uint16_t days = later.addMinutes(12 * 60);
-        if (days > 0)
-        {
-          Time midnight(24, 00);
-          if (now < m_alarms[i].m_time && m_alarms[i].m_time < midnight)
-          {
-            digitalWrite(A1, HIGH);
-            break;
-          }
-        }
-        if (m_alarms[i].m_time < later)
-        {
-          digitalWrite(A1, HIGH);
-          break;
-        }
+        digitalWrite(A1, HIGH);
         break;
       }
+    }
+    if (m_snooze.m_enabled && m_snooze.m_time.isSoon(m_time))
+    {
+      digitalWrite(A1, HIGH);
     }
   }
   memset(m_chars, ' ', 4);
