@@ -1,6 +1,7 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
+#include "light.h"
 #include "remote.h"
 #include "timer.h"
 
@@ -81,6 +82,7 @@ private:
   int8_t m_edit;
   char m_chars[4];
   uint8_t m_channel;
+  uint8_t m_brightness;
 
   static const size_t ALARM_COUNT = 10;
   Alarm m_alarms[ALARM_COUNT];
@@ -102,6 +104,7 @@ public:
   Clock();
   void init();
   void useRemote(const Remote &remote);
+  void useLight(const Light& light);
   void update();
   char const *getChars() const;
   bool alarm() const;

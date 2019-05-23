@@ -24,6 +24,7 @@ void Application::update()
   m_remote.update();
 
   m_clock.useRemote(m_remote);
+  m_clock.useLight(m_light);
   m_clock.update();
 
   m_volume.useRemote(m_remote);

@@ -184,33 +184,38 @@ void Clock::useRemote(const Remote &remote)
   }
 }
 
+void Clock::useLight(const Light &light)
+{
+  m_brightness = light.getBrightness();
+}
+
 void Clock::update()
 {
   if (m_channel)
   {
     if (m_alarms[m_channel - 1].m_enabled)
     {
-      digitalWrite(A1, HIGH);
+      analogWrite(A1, m_brightness);
     }
     else
     {
-      digitalWrite(A1, LOW);
+      analogWrite(A1, 0);
     }
   }
   else
   {
-    digitalWrite(A1, LOW);
+    analogWrite(A1, 0);
     for (size_t i = 0; i < ALARM_COUNT; i++)
     {
       if (m_alarms[i].m_enabled && m_alarms[i].m_time.isSoon(m_time))
       {
-        digitalWrite(A1, HIGH);
+        analogWrite(A1, m_brightness);
         break;
       }
     }
     if (m_snooze.m_enabled && m_snooze.m_time.isSoon(m_time))
     {
-      digitalWrite(A1, HIGH);
+      analogWrite(A1, m_brightness);
     }
   }
   memset(m_chars, ' ', 4);
