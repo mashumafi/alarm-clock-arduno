@@ -11,7 +11,8 @@ Clock::Clock() : m_second(0),
                  m_channel(0),
                  m_show_state(false),
                  m_set(false),
-                 m_blink(false)
+                 m_blink(false),
+                 m_brightness(5)
 {
 }
 
@@ -186,31 +187,35 @@ void Clock::useRemote(const Remote &remote)
 
 void Clock::update()
 {
-  if (m_channel)
+  static const uint8_t LED = 3;
+  if (m_snooze_light_timer.countdown(32))
   {
-    if (m_alarms[m_channel - 1].m_enabled)
+    if (m_channel)
     {
-      analogWrite(A1, m_brightness);
+      if (m_alarms[m_channel - 1].m_enabled)
+      {
+        analogWrite(LED, m_brightness);
+      }
+      else
+      {
+        analogWrite(LED, 0);
+      }
     }
     else
     {
-      analogWrite(A1, 0);
-    }
-  }
-  else
-  {
-    analogWrite(A1, 0);
-    for (size_t i = 0; i < ALARM_COUNT; i++)
-    {
-      if (m_alarms[i].m_enabled && m_alarms[i].m_time.isSoon(m_time))
+      analogWrite(LED, 0);
+      for (size_t i = 0; i < ALARM_COUNT; i++)
       {
-        analogWrite(A1, m_brightness);
-        break;
+        if (m_alarms[i].m_enabled && m_alarms[i].m_time.isSoon(m_time))
+        {
+          analogWrite(LED, m_brightness);
+          break;
+        }
       }
-    }
-    if (m_snooze.m_enabled && m_snooze.m_time.isSoon(m_time))
-    {
-      analogWrite(A1, m_brightness);
+      if (m_snooze.m_enabled && m_snooze.m_time.isSoon(m_time))
+      {
+        analogWrite(LED, m_brightness);
+      }
     }
   }
   memset(m_chars, ' ', 4);

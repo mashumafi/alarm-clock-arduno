@@ -83,6 +83,7 @@ private:
   char m_chars[4];
   uint8_t m_channel;
   uint8_t m_brightness;
+  Timer m_snooze_light_timer;
 
   static const size_t ALARM_COUNT = 10;
   Alarm m_alarms[ALARM_COUNT];
@@ -107,7 +108,7 @@ public:
   template<typename Pin>
   void useLight(const Pin& light)
   {
-    m_brightness = map(light.getBrightness(), 0, 100, 50, 150);
+    m_brightness = map(light.getBrightness(), 0, 100, 10, 25);
   }
   void update();
   char const *getChars() const;
